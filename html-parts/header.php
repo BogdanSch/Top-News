@@ -17,8 +17,8 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <form class="search-form form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2 me-1" type="search" placeholder="Search" aria-label="Search">
+                    <form class="search-form form-inline my-2 my-lg-0" method="get" action="search.php">
+                        <input class="form-control mr-sm-2 me-1" type="search" placeholder="Search" aria-label="Search" name="searchKeyword">
                         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </div>

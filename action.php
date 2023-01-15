@@ -121,14 +121,67 @@ function get_username_by_id($id){
         if (!$result = $conn->query($sql)) {
             throw new Exception('Error selection from table `news_table`: [' . $conn->error . ']');
         }
-        // while ($row = $result->fetch_assoc()) {
-           
-        // }
         return $result->fetch_assoc()['log'];;
     } catch (Exception $e) {
         echo $e->getMessage();
     }
 }
+// sort - start
+function out_arr_search(array $arr_index = null)
+{
+    global $films;
+    $arr_out = [];
+    $arr_out[] = "<div class=\"table-films\"><table class=\"table-films table text-white-50\">";
+    $arr_out[] = print_table_start();
+    foreach ($films as $index => $country) {
+        if ($arr_index != null && in_array($index, $arr_index)) {
+            static $i = 1;
+            $str = "<tr>" . "<td>" . $i . "</td>";
+            foreach ($country as $key => $value) {
+                if (!is_array($value)) {
+                    if($key === "name")
+                        $str .= "<td><a href=\"./order.php?film=$value\">$value</a></td>";
+                    elseif($key === "rating"){
+                        $str .= "<td>$value/10</td>";
+                    }
+                    else
+                        $str .= "<td>$value</td>";
+                } 
+                else {
+                    foreach ($value as $k => $v) {
+                        $str .= "<td>$v</td>";
+                    }
+                }
+            }
+            $arr_out[] = $str;
+            $i++;
+        }
+    }
+    $arr_out[] = "</table></div>";
+    return $arr_out;
+}
+function out_search($data)
+{
+    $articles = out(14);
+    $arr_index = array();
+    foreach ($articles as $article_number => $article) {
+        foreach ($article as $key => $value) {
+            if (!is_array($value)) {
+                if (stristr($value, $data)) {
+                    $arr_index[] = $article_number;
+                }
+            } else {
+                foreach ($value as $k => $v) {
+                    if (stristr($v, $data) || strstr($k, $data)) {
+                        $arr_index[] = $article_number;
+                    }
+                }
+            }
+        }
+    }
+    return out_arr_search(array_unique($arr_index));
+}
+// sort - end
 function add()
 {
     global $conn;
@@ -167,4 +220,8 @@ if (isset($_REQUEST['action'])) {
         default:
             header("Location: index.php");
     }
+}
+function test_input($data)
+{
+    return htmlspecialchars(stripslashes(trim($data)));
 }
