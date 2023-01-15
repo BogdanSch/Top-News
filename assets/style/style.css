@@ -1,0 +1,125 @@
+/* General -  Start */
+body *{
+    transition: all 0.5s ease;
+}
+::-webkit-scrollbar {
+	width: 7px;
+	background-color: rgb(224, 224, 224);
+}
+::-webkit-scrollbar-thumb {
+	background: rgb(143, 143, 143);
+	border-radius: 50px;
+}
+h2{
+    text-align: center;
+}
+img{
+    border-radius: 10px;
+    width: 50%;
+}
+.card:hover{
+    box-shadow: 13px 10px 37px -16px rgba(0,0,0,0.38);
+}
+.btn-page{
+    /* text-align: center; */
+    display: block;
+    margin: 0 auto;
+    max-width: 150px;
+}
+/* General - End */
+/* Header - Start */
+.navbar-nav{
+    align-items: center;
+    justify-content: center;
+}
+.user-item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+}
+.user-item a{
+    color: rgba(var(--bs-dark-rgb),var(--bs-text-opacity))!important;
+    margin-right: 10px;
+    text-decoration: none;
+}
+.user-item img{
+    width: 30px;
+    border-radius: 30px;
+}
+.search-form{
+    display: flex;
+    flex-direction: row;
+}
+.nav-item:hover{
+    border: 1px dashed #000;
+}
+/* Header - End */
+/* News-About - Start */
+.news__description{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.news__text{
+    text-align: center;
+    max-width: 50%;
+}
+/* News-About - End */
+/* Articles - Start */
+.articles__list{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.article__item {
+    margin: 10px;
+    padding: 5px;
+    width: 32rem;
+}
+.article__title{
+    text-align: center;
+    font-weight: 700;
+    font-size: 20px;
+}
+.article__publisher {
+    color: #999999;
+    /* border-bottom: 1px solid #999999; */
+    padding: 5px;
+}
+.article__content {
+    text-align: center;
+    background: #fafafa;
+    padding: 5px;
+}
+.article__date {
+    /* color: #999999; */
+    /* border-top: 1px solid #999999; */
+    padding: 5px;
+}
+.user__name {
+    color: rgb(0, 30, 255);
+    font-weight: bold;
+}
+/* Messages - End */
+/* Article-form - Start */
+.article-form__wrap{
+    max-width: 50%;
+    margin: 2px auto;
+}
+.btn-send{
+    margin-top: 5px;
+}
+/* Article-form - End */
+/* Footer - Start */
+footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+/* Footer - End */
