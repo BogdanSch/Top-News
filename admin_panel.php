@@ -14,12 +14,6 @@ if (!$_SESSION['user_login']) {
     <div class="article-form__wrap">
         <form name="myForm" action="action.php" method="post" onSubmit="return overify_message(this);">
             <input type=hidden name="action" value="add">
-            <div class="input-group mb-3 input-username">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Username</span>
-                </div>
-                <input type="text" name="username" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-            </div>
             <div class="input-group mb-3 input-title">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Article title</span>

@@ -14,7 +14,7 @@ function out($count, $offset = 0, $sort_topic = "all")
                 throw new Exception('Error selection from table `news_table`: [' . $conn->error . ']');
             }
         } else {
-            if (!$result = $conn->query("SELECT * FROM `news_table` WHERE `article_type` = '".$sort_topic."' ORDER BY article_date DESC LIMIT ".$count." OFFSET ".$offset."")) {
+            if (!$result = $conn->query("SELECT * FROM `news_table` WHERE `article_type` = '" . $sort_topic . "' ORDER BY article_date DESC LIMIT " . $count . " OFFSET " . $offset . "")) {
                 throw new Exception('Error selection from table `news_table`: [' . $conn->error . ']');
             }
         }
@@ -43,7 +43,7 @@ function out_pages($sql = "SELECT COUNT(`article_author`) FROM news_table;", $so
     $str = '<div class="pages"><ul class="pagination justify-content-center" style="margin:20px 0">';
     $n = 1;
     for ($i = 0; $i < $count_articles; $i += 5) {
-        $str .= '<li class="page-item"><a class="page-link" href="news.php?'.$sort.'&page=' . $n . '">' . $n . '</a></li>';
+        $str .= '<li class="page-item"><a class="page-link" href="news.php?' . $sort . '&page=' . $n . '">' . $n . '</a></li>';
         $n++;
     }
     $str .= '</ul></div>';
@@ -114,9 +114,10 @@ function registration($log, $pas)
         return true;
     }
 }
-function get_username_by_id($id){
+function get_username_by_id($id)
+{
     global $conn;
-    $sql = "SELECT `users`.log FROM `users` INNER JOIN `news_table` ON $id = users.user_id;";
+    $sql = "SELECT `users`.log FROM `users` WHERE `users`.user_id = $id;";
     try {
         if (!$result = $conn->query($sql)) {
             throw new Exception('Error selection from table `news_table`: [' . $conn->error . ']');
@@ -126,38 +127,53 @@ function get_username_by_id($id){
         echo $e->getMessage();
     }
 }
-// sort - start
-function out_arr_search(array $arr_index = null)
+function get_user_id_by_username($username)
 {
-    global $films;
+    global $conn;
+    $sql = "SELECT `users`.user_id FROM `users` WHERE `users`.log = '" . $username . "'";
+    try {
+        if (!$result = $conn->query($sql)) {
+            throw new Exception('Error selection from table `news_table`: [' . $conn->error . ']');
+        }
+        return $result->fetch_assoc()['user_id'];;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
+}
+// sort - start
+function out_arr_search(array $arr_index = null, array $articles)
+{
     $arr_out = [];
-    $arr_out[] = "<div class=\"table-films\"><table class=\"table-films table text-white-50\">";
-    $arr_out[] = print_table_start();
-    foreach ($films as $index => $country) {
+    $arr_out[] = "<div class=\"articles__list\">";
+    $str = "";
+    foreach ($articles as $index => $article) {
         if ($arr_index != null && in_array($index, $arr_index)) {
             static $i = 1;
-            $str = "<tr>" . "<td>" . $i . "</td>";
-            foreach ($country as $key => $value) {
-                if (!is_array($value)) {
-                    if($key === "name")
-                        $str .= "<td><a href=\"./order.php?film=$value\">$value</a></td>";
-                    elseif($key === "rating"){
-                        $str .= "<td>$value/10</td>";
-                    }
-                    else
-                        $str .= "<td>$value</td>";
-                } 
-                else {
-                    foreach ($value as $k => $v) {
-                        $str .= "<td>$v</td>";
-                    }
-                }
-            }
+            // print_r($article);
+            // echo  "<hr>";
+            $str .= '<div class="article__item card">
+                    <div class="card-body">
+                        <div class="article__title card-title">' . $article["article_title"] . '</div>
+                        <hr>
+                        <div class="article__content card-text">' . $article["article_content"] . '</div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="article__publisher">Publisher: <span class="user__name">' . get_username_by_id($article["article_author"]) . '</span></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="article__date">Article topic: ' . $article["article_type"] . ' </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="article__date">Publish date: ' . $article["article_date"] . '</div>
+                        </li>
+                    </ul>
+                </div>';
             $arr_out[] = $str;
             $i++;
         }
     }
-    $arr_out[] = "</table></div>";
+    $arr_out[] = "</div>";
     return $arr_out;
 }
 function out_search($data)
@@ -179,21 +195,21 @@ function out_search($data)
             }
         }
     }
-    return out_arr_search(array_unique($arr_index));
+    return out_arr_search(array_unique($arr_index), $articles);
 }
 // sort - end
 function add()
 {
     global $conn;
-    $author = $_REQUEST['username'];
+    $author_id =  get_user_id_by_username($_SESSION['user_login']);
+    // echo $author_id;
     $title = $_REQUEST['title'];
     $content = $_REQUEST['content'];
     $article_type = $_REQUEST['topic'];
-
-    echo $article_type;
+    // echo $article_type;
     try {
         if (!$conn->query("INSERT INTO `news_table` (article_author, article_date, article_title, article_content, article_type)
-         VALUES ('$author', NOW(), '$title', '$content', '$article_type')")) {
+         VALUES ($author_id, NOW(), '$title', '$content', '$article_type');")) {
             throw new Exception('Помилка заповнення  таблиці news_table: [' . $conn->error . ']');
         }
         $_SESSION['add'] = true;
