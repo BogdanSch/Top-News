@@ -10,7 +10,7 @@ body *{
 	background: rgb(143, 143, 143);
 	border-radius: 50px;
 }
-h2{
+h1, h2{
     text-align: center;
 }
 img{

@@ -27,7 +27,7 @@ include "html-parts/header.php"; ?>
             $out = out(5);
             if (count($out) > 0) {
                 foreach ($out as $row) {
-                    print_article_item($row);
+                    echo get_article_item($row);
                 }
             } else {
                 echo "В гостевой книге пока нет записей...<br>";

@@ -8,7 +8,6 @@ function out($count, $offset = 0, $sort_topic = "all")
     global $conn;
     $arr_out = [];
     try {
-        $result = null;
         if ($sort_topic == "all") {
             if (!$result = $conn->query("SELECT * FROM `news_table` ORDER BY article_date DESC LIMIT " . $count . " OFFSET $offset")) {
                 throw new Exception('Error selection from table `news_table`: [' . $conn->error . ']');
@@ -26,20 +25,21 @@ function out($count, $offset = 0, $sort_topic = "all")
     }
     return $arr_out;
 }
-function out_pages($sql = "SELECT COUNT(`article_author`) FROM news_table;", $sort = "")
+function get_count_articles($sql)
 {
     global $conn;
-    $count_articles = 0;
     try {
         if (!$result = $conn->query($sql)) {
             throw new Exception('Error selection from table `news_table`: [' . $conn->error . ']');
         }
-        while ($row = $result->fetch_assoc()) {
-            $count_articles = $row['COUNT(`article_author`)'];
-        }
+        return $result->fetch_assoc()['COUNT(`article_author`)'];
     } catch (Exception $e) {
         echo $e->getMessage();
     }
+}
+function out_pages($sql = "SELECT COUNT(`article_author`) FROM news_table;", $sort = "")
+{
+    $count_articles = get_count_articles($sql);
     $str = '<div class="pages"><ul class="pagination justify-content-center" style="margin:20px 0">';
     $n = 1;
     for ($i = 0; $i < $count_articles; $i += 5) {
@@ -49,28 +49,38 @@ function out_pages($sql = "SELECT COUNT(`article_author`) FROM news_table;", $so
     $str .= '</ul></div>';
     return $str;
 }
-function print_article_item($row)
+function out_pages_searched(array $searched_articles, $search_request = "")
 {
-?>
-    <div class="article__item card">
-        <div class="card-body">
-            <div class="article__title card-title"><?php echo $row["article_title"]; ?></div>
-            <hr>
-            <div class="article__content card-text"><?php echo $row["article_content"]; ?></div>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <div class="article__publisher">Publisher: <span class="user__name"><?php echo get_username_by_id($row["article_author"]); ?></span></div>
-            </li>
-            <li class="list-group-item">
-                <div class="article__date">Article topic: <?php echo $row["article_type"]; ?> </div>
-            </li>
-            <li class="list-group-item">
-                <div class="article__date">Publish date: <?php echo $row["article_date"]; ?> </div>
-            </li>
-        </ul>
-    </div>
-<?php
+    $str = '<div class="pages"><ul class="pagination justify-content-center" style="margin:20px 0">';
+    $n = 1;
+    for ($i = 0; $i < count($searched_articles); $i += 5) {
+        
+        $str .= '<li class="page-item"><a class="page-link" href="search.php?' . $search_request . '&page=' . $n . '">' . $n . '</a></li>';
+        $n++;
+    }
+    $str .= '</ul></div>';
+    return $str;
+}
+function get_article_item($row)
+{
+    return '<div class="article__item card">
+                    <div class="card-body">
+                        <div class="article__title card-title">' . $row["article_title"] . '</div>
+                        <hr>
+                        <div class="article__content card-text">' . $row["article_content"] . '</div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="article__publisher">Publisher: <span class="user__name">' . get_username_by_id($row["article_author"]) . '</span></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="article__date">Article topic: ' . $row["article_type"] . ' </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="article__date">Publish date: ' . $row["article_date"] . '</div>
+                        </li>
+                    </ul>
+                </div>';
 }
 function check_autorize($log, $pas)
 {
@@ -144,41 +154,17 @@ function get_user_id_by_username($username)
 function out_arr_search(array $arr_index = null, array $articles)
 {
     $arr_out = [];
-    $arr_out[] = "<div class=\"articles__list\">";
-    $str = "";
     foreach ($articles as $index => $article) {
         if ($arr_index != null && in_array($index, $arr_index)) {
-            static $i = 1;
-            // print_r($article);
-            // echo  "<hr>";
-            $str .= '<div class="article__item card">
-                    <div class="card-body">
-                        <div class="article__title card-title">' . $article["article_title"] . '</div>
-                        <hr>
-                        <div class="article__content card-text">' . $article["article_content"] . '</div>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <div class="article__publisher">Publisher: <span class="user__name">' . get_username_by_id($article["article_author"]) . '</span></div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="article__date">Article topic: ' . $article["article_type"] . ' </div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="article__date">Publish date: ' . $article["article_date"] . '</div>
-                        </li>
-                    </ul>
-                </div>';
+            $str = get_article_item($article);
             $arr_out[] = $str;
-            $i++;
         }
     }
-    $arr_out[] = "</div>";
     return $arr_out;
 }
 function out_search($data)
 {
-    $articles = out(14);
+    $articles = out(get_count_articles("SELECT COUNT(`article_author`) FROM news_table;"));
     $arr_index = array();
     foreach ($articles as $article_number => $article) {
         foreach ($article as $key => $value) {
