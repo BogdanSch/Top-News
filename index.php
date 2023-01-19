@@ -1,5 +1,5 @@
 <?php
-include_once "action.php";
+require_once "action.php";
 include "html-parts/header.php"; ?>
 <section class="news__about">
     <div class="news__wrap">

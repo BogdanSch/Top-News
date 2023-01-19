@@ -1,5 +1,5 @@
 <?php
-include_once "action.php";
+require_once "action.php";
 
 $str_form = "<form name='autoForm' action='autorize.php' method='post' onSubmit='return overify_login(this);'>
     Login: <input type='text' name='login'>

@@ -1,5 +1,5 @@
 <?php
-include_once "dbconnect.php";
+require_once "dbconnect.php";
 
 try {
     $conn->query("SET NAMES utf8mb4");

@@ -1,5 +1,5 @@
 <?php
-include_once "config.php";
+require_once "config.php";
 
 try {
     $conn = new mysqli(SERVERNAME, USERNAME, PASSWORD, DBNAME);

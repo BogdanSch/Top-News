@@ -1,5 +1,5 @@
 <?php
-include_once "action.php";
+require_once "action.php";
 include "html-parts/header.php";
 
 $str_form = "<form  name='autoForm' action='registration.php' method='post' onSubmit='return overify_login(this);' >

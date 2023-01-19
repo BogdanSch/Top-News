@@ -1,5 +1,5 @@
 <?php
-include_once "action.php";
+require_once "action.php";
 include "html-parts/header.php";
 
 if (isset($_SESSION['user_login'])) {

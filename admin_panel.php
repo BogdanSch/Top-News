@@ -1,5 +1,5 @@
 <?php
-include_once "DB-Files/dbconnect.php";
+require_once "./db-settings/dbconnect.php";
 
 ob_start();
 session_start();

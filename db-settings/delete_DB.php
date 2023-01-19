@@ -1,5 +1,5 @@
 <?php
-include_once "dbconnect.php";
+require_once "dbconnect.php";
 try {
 	$conn = new mysqli(SERVERNAME, USERNAME, PASSWORD);
 	if ($conn->connect_error) {
