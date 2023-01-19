@@ -14,6 +14,7 @@ if (isset($_GET['searchKeyword'])) {
         $page = $_GET['page'];
         if (count($out) > 0) {
             for ($i = (5 * $page) - 5; $i < $page * 5; $i++) {
+                if($i > count($out)) break;
                 echo $out[$i];
             }
         } else {
@@ -22,6 +23,7 @@ if (isset($_GET['searchKeyword'])) {
     } else {
         if (count($out) > 0) {
             for ($i = 0; $i < 5; $i++) {
+                if($i > count($out)) break;
                 echo $out[$i];
             }
         } else {
