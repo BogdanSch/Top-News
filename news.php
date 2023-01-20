@@ -1,6 +1,6 @@
 <?php
-include "html-parts/header.php";
 require_once "action.php";
+include "html-parts/header.php";
 ?>
 <section class="form-sort">
     <div class="form-sort__wrap">
@@ -34,6 +34,7 @@ require_once "action.php";
             $out;
             if (isset($_GET['topic']) && $_GET['topic'] != "all") {
                 $sort_topic = $_GET['topic'];
+                $page;
                 if (isset($_GET['page'])) {
                     $page = $_GET['page'];
                     $out = out(5, ($page - 1) * 5, $sort_topic);
@@ -48,8 +49,13 @@ require_once "action.php";
                     echo "В гостевой книге пока нет записей...<br>";
                 }
                 echo '</div>';
-                echo out_pages("SELECT COUNT(`article_author`) FROM news_table WHERE `article_type` = '".$sort_topic."';", "topic=$sort_topic");
+                if(isset($page))
+                    echo out_pages($sort_topic, $page);
+                else
+                    echo out_pages($sort_topic);
+                
             } else {
+                $page;
                 if (isset($_GET['page'])) {
                     $page = $_GET['page'];
                     $out = out(5, ($page - 1) * 5);
@@ -64,7 +70,10 @@ require_once "action.php";
                     echo "В гостевой книге пока нет записей...<br>";
                 }
                 echo '</div>';
-                echo out_pages();
+                if(isset($page))
+                    echo out_pages(current_page:$page);
+                else
+                    echo out_pages();
             }
             ?>
         </div>

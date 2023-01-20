@@ -1,7 +1,9 @@
 <?php
 require_once "db-settings/dbconnect.php";
 if (!isset($_SESSION)) {
+    ob_start();
     session_start();
+    ob_end_flush();
 }
 function out($count, $offset = 0, $sort_topic = "all")
 {
@@ -37,25 +39,34 @@ function get_count_articles($sql)
         echo $e->getMessage();
     }
 }
-function out_pages($sql = "SELECT COUNT(`article_author`) FROM news_table;", $sort = "")
+function out_pages($sort_topic="all", $current_page = 1)
 {
-    $count_articles = get_count_articles($sql);
+    if($sort_topic == "all")
+        $search_sql = "SELECT COUNT(`article_author`) FROM news_table;";
+    else
+        $search_sql = "SELECT COUNT(`article_author`) FROM news_table WHERE `article_type` = '".$sort_topic."'";
+    $count_articles = get_count_articles($search_sql);
     $str = '<div class="pages"><ul class="pagination justify-content-center" style="margin:20px 0">';
     $n = 1;
     for ($i = 0; $i < $count_articles; $i += 5) {
-        $str .= '<li class="page-item"><a class="page-link" href="news.php?' . $sort . '&page=' . $n . '">' . $n . '</a></li>';
+        if($n == $current_page)
+            $str .= '<li class="page-item"><a class="page-link active" href="news.php?topic='.$sort_topic.'&page=' . $n . '">' . $n . '</a></li>';
+        else
+            $str .= '<li class="page-item"><a class="page-link" href="news.php?topic='.$sort_topic.'&page=' . $n . '">' . $n . '</a></li>';
         $n++;
     }
     $str .= '</ul></div>';
     return $str;
 }
-function out_pages_searched(array $searched_articles, $search_request = "")
+function out_pages_searched(array $searched_articles, $search_keyword = "", $current_page = 1)
 {
     $str = '<div class="pages"><ul class="pagination justify-content-center" style="margin:20px 0">';
     $n = 1;
     for ($i = 0; $i < count($searched_articles); $i += 5) {
-        
-        $str .= '<li class="page-item"><a class="page-link" href="search.php?' . $search_request . '&page=' . $n . '">' . $n . '</a></li>';
+        if($n == $current_page)
+            $str .= '<li class="page-item"><a class="page-link active" href="search.php?searchKeyword=' . $search_keyword . '&page=' . $n . '">' . $n . '</a></li>';
+        else
+            $str .= '<li class="page-item"><a class="page-link" href="search.php?searchKeyword=' . $search_keyword . '&page=' . $n . '">' . $n . '</a></li>';
         $n++;
     }
     $str .= '</ul></div>';
