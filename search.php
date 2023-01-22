@@ -5,7 +5,7 @@ include "html-parts/header.php";
 echo '<div class="container">';
 if (isset($_GET['searchKeyword'])) {
     $data = test_input($_GET['searchKeyword']);
-    echo "<h1>Results by request {$data}</h1><hr>";
+    echo "<h1>Results by request: {$data}</h1><hr>";
     echo '<div class="articles__list">';
     $out = out_search($data);
     $page;

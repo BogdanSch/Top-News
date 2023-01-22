@@ -7,7 +7,7 @@ include "html-parts/header.php";
         <div class="container">
             <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
                 <div class="form-group">
-                    <label for="topic">Sort by topic</label>
+                    <label for="topic">Seek by topic</label>
                     <select class="form-control" name="topic" id="topic">
                         <option value="all">all</option>
                         <option value="games">games</option>
@@ -28,8 +28,13 @@ include "html-parts/header.php";
 <section class="news">
     <div class="news__wrap">
         <div class="container">
-            <h2>Choose the topic to sort by:</h2>
             <?php
+            if(isset($_GET['topic'])){
+                echo "<h2>The topic to seek by: {$_GET['topic']}</h2>";
+            }
+            else{
+                echo "<h2>The topic to seek by: all</h2>";
+            }
             echo '<div class="articles__list">';
             $out;
             if (isset($_GET['topic']) && $_GET['topic'] != "all") {
