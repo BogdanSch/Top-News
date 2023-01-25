@@ -3,7 +3,7 @@
 <hr>
     <footer>
         <div class="container">
-            <h2>All rights reserved 2023</h2>
+            <h2>All rights reserved 2023. Made by Bohdan Shcherbak Php-Web 22</h2>
         </div>
     </footer>
 </body>
