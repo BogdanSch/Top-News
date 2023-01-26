@@ -72,6 +72,18 @@ function out_pages_searched(array $searched_articles, $search_keyword = "", $cur
     $str .= '</ul></div>';
     return $str;
 }
+function print_page_content($sort_topic = "all", $page = 1){
+    $out = out(5, ($page - 1) * 5, $sort_topic);
+    if (count($out) > 0) {
+        foreach ($out as $row) {
+            echo get_article_item($row);
+        }
+    } else {
+        echo "В гостевой книге пока нет записей...<br>";
+    }
+    echo '</div>';
+    echo out_pages($sort_topic, $page);
+} 
 function get_article_item($row)
 {
     return '<div class="article__item card">

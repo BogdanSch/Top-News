@@ -29,56 +29,35 @@ include "html-parts/header.php";
     <div class="news__wrap">
         <div class="container">
             <?php
-            if(isset($_GET['topic'])){
+            if (isset($_GET['topic'])) {
                 echo "<h2>The topic to seek by: {$_GET['topic']}</h2>";
-            }
-            else{
+            } else {
                 echo "<h2>The topic to seek by: all</h2>";
             }
             echo '<div class="articles__list">';
             $out;
-            if (isset($_GET['topic']) && $_GET['topic'] != "all") {
+            if (isset($_GET['topic'])) {
                 $sort_topic = $_GET['topic'];
-                $page;
-                if (isset($_GET['page'])) {
+                if(isset($_GET['page']))
                     $page = $_GET['page'];
-                    $out = out(5, ($page - 1) * 5, $sort_topic);
-                } else {
-                    $out = out(5, 0, $sort_topic);
-                }
-                if (count($out) > 0) {
-                    foreach ($out as $row) {
-                        echo get_article_item($row);
+                if ($sort_topic == "all") {
+                    if (isset($page)) {
+                        print_page_content("all", $page);
+                    } else {
+                        print_page_content("all", 1);
                     }
                 } else {
-                    echo "В гостевой книге пока нет записей...<br>";
-                }
-                echo '</div>';
-                if(isset($page))
-                    echo out_pages($sort_topic, $page);
-                else
-                    echo out_pages($sort_topic);
-                
-            } else {
-                $page;
-                if (isset($_GET['page'])) {
-                    $page = $_GET['page'];
-                    $out = out(5, ($page - 1) * 5);
-                } else {
-                    $out = out(5);
-                }
-                if (count($out) > 0) {
-                    foreach ($out as $row) {
-                        echo get_article_item($row);
+                    if (isset($page)) {
+                        print_page_content($sort_topic, $page);
+                    } else {
+                        print_page_content($sort_topic, 1);
                     }
-                } else {
-                    echo "В гостевой книге пока нет записей...<br>";
                 }
-                echo '</div>';
-                if(isset($page))
-                    echo out_pages(current_page:$page);
+            }else{
+                if(isset($_GET['page']))
+                    print_page_content("all", $_GET['page']);
                 else
-                    echo out_pages();
+                    print_page_content("all");
             }
             ?>
         </div>
